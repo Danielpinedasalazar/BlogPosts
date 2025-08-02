@@ -6,13 +6,11 @@ import { AuthModule } from './auth/auth.module';
 import { MetaOptionsModule } from './meta-options/meta-options.module';
 import { Module } from '@nestjs/common';
 import { PostsModule } from './posts/posts.module';
-import { Tag } from './tags/tag.entity';
 import { TagsModule } from './tags/tags.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 /**
  * Importing Entities
  * */
-import { User } from './users/user.entity';
 import { UsersModule } from './users/users.module';
 import appConfig from './config/app.config';
 import databaseConfig from './config/database.config';
