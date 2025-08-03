@@ -1,73 +1,313 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# NestJS Blog API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A comprehensive blog management system built with NestJS, TypeORM, and PostgreSQL. This application provides a complete REST API for managing users, posts, tags, and meta options with authentication and pagination support.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Features
 
-## Description
+- **User Management**: Create, read, update, and delete users with secure password hashing
+- **Post Management**: Full CRUD operations for blog posts with rich metadata
+- **Tag System**: Organize posts with flexible tagging system
+- **Meta Options**: Extensible metadata system for posts
+- **Authentication**: Secure user authentication with bcrypt
+- **Pagination**: Built-in pagination support for all list endpoints
+- **Validation**: Comprehensive input validation using class-validator
+- **Swagger Documentation**: Auto-generated API documentation
+- **Environment Configuration**: Multi-environment configuration support
+- **TypeORM Integration**: Database management with PostgreSQL
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🏗️ Architecture
 
-## Installation
+### Core Modules
 
-```bash
-$ npm install
+- **Users Module**: User management and authentication
+- **Posts Module**: Blog post CRUD operations
+- **Tags Module**: Tag management system
+- **Meta Options Module**: Extensible metadata system
+- **Auth Module**: Authentication and authorization
+- **Pagination Module**: Reusable pagination functionality
+
+### Database Schema
+
+#### Users
+
+- `id`: Primary key
+- `firstName`: User's first name (required)
+- `lastName`: User's last name (optional)
+- `email`: Unique email address (required)
+- `password`: Hashed password (required)
+- `posts`: One-to-many relationship with posts
+
+#### Posts
+
+- `id`: Primary key
+- `title`: Post title (required)
+- `postType`: Enum (POST, PAGE, etc.)
+- `slug`: Unique URL slug (required)
+- `status`: Enum (DRAFT, PUBLISHED, etc.)
+- `content`: Post content (optional)
+- `schema`: JSON schema for structured data (optional)
+- `featuredImageUrl`: Featured image URL (optional)
+- `publishOn`: Publication date (optional)
+- `author`: Many-to-one relationship with users
+- `tags`: Many-to-many relationship with tags
+- `metaOptions`: One-to-one relationship with meta options
+
+#### Tags
+
+- `id`: Primary key
+- `name`: Tag name (required)
+- `posts`: Many-to-many relationship with posts
+
+#### Meta Options
+
+- `id`: Primary key
+- `metaValue`: JSON metadata (required)
+- `post`: One-to-one relationship with posts
+
+## 🛠️ Tech Stack
+
+- **Framework**: NestJS 10.x
+- **Database**: PostgreSQL with TypeORM
+- **Authentication**: bcrypt for password hashing
+- **Validation**: class-validator & class-transformer
+- **Documentation**: Swagger/OpenAPI
+- **Configuration**: @nestjs/config with Joi validation
+- **Package Manager**: pnpm
+
+## 📋 Prerequisites
+
+- Node.js (v18 or higher)
+- PostgreSQL database
+- pnpm package manager
+
+## 🚀 Installation & Setup
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <repository-url>
+   cd nestjs-intro
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   pnpm install
+   ```
+
+3. **Environment Configuration**
+
+   Create environment files based on your environment:
+
+   **Development** (`.env.development`):
+
+   ```env
+   NODE_ENV=development
+   DATABASE_HOST=localhost
+   DATABASE_PORT=5432
+   DATABASE_USER=your_db_user
+   DATABASE_PASSWORD=your_db_password
+   DATABASE_NAME=your_db_name
+   DATABASE_SYNC=true
+   DATABASE_AUTOLOAD=true
+   ```
+
+   **Production** (`.env.production`):
+
+   ```env
+   NODE_ENV=production
+   DATABASE_HOST=your_prod_host
+   DATABASE_PORT=5432
+   DATABASE_USER=your_prod_user
+   DATABASE_PASSWORD=your_prod_password
+   DATABASE_NAME=your_prod_db
+   DATABASE_SYNC=false
+   DATABASE_AUTOLOAD=true
+   ```
+
+4. **Database Setup**
+
+   ```bash
+   # Create PostgreSQL database
+   createdb your_db_name
+   ```
+
+5. **Run the application**
+
+   ```bash
+   # Development mode
+   pnpm start:dev
+
+   # Production mode
+   pnpm build
+   pnpm start:prod
+   ```
+
+## 📚 API Documentation
+
+Once the application is running, you can access the Swagger documentation at:
+
+```
+http://localhost:3000/api
 ```
 
-## Running the app
+## 🔌 API Endpoints
 
-```bash
-# development
-$ npm run start
+### Users
 
-# watch mode
-$ npm run start:dev
+- `GET /users` - Get all users (with pagination)
+- `GET /users/:id` - Get user by ID
+- `POST /users` - Create a new user
+- `POST /users/create-many` - Create multiple users
+- `PATCH /users/:id` - Update user
+- `DELETE /users/:id` - Delete user
 
-# production mode
-$ npm run start:prod
+### Posts
+
+- `GET /posts` - Get all posts (with pagination)
+- `GET /posts/:id` - Get post by ID
+- `POST /posts` - Create a new post
+- `PATCH /posts/:id` - Update post
+- `DELETE /posts/:id` - Delete post
+
+### Tags
+
+- `GET /tags` - Get all tags
+- `POST /tags` - Create a new tag
+- `DELETE /tags/:id` - Delete tag
+
+### Meta Options
+
+- `POST /meta-options` - Create meta options for a post
+
+## 📝 Example API Requests
+
+### Create a User
+
+```http
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "password": "securepassword123"
+}
 ```
 
-## Test
+### Create a Post
 
-```bash
-# unit tests
-$ npm run test
+```http
+POST http://localhost:3000/posts
+Content-Type: application/json
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+{
+  "title": "What's new with NestJS",
+  "postType": "post",
+  "slug": "new-with-nestjs-10",
+  "status": "draft",
+  "content": "This is the post content...",
+  "schema": "{\"@context\": \"https://schema.org\", \"@type\": \"Article\"}",
+  "featuredImageUrl": "http://example.com/image.jpg",
+  "authorId": 1,
+  "tags": [1, 2],
+  "metaOptions": {
+    "metaValue": "{\"sidebarEnabled\": true, \"footerActive\": true}"
+  }
+}
 ```
 
-## Support
+### Get Posts with Pagination
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```http
+GET http://localhost:3000/posts/?limit=10&page=1
+```
 
-## Stay in touch
+## 🧪 Testing
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+# Unit tests
+pnpm test
 
-## License
+# E2E tests
+pnpm test:e2e
 
-Nest is [MIT licensed](LICENSE).
+# Test coverage
+pnpm test:cov
+```
+
+## 📖 Documentation Generation
+
+Generate comprehensive documentation using Compodoc:
+
+```bash
+pnpm doc
+```
+
+This will start a documentation server at `http://localhost:3001`
+
+## 🔧 Development Scripts
+
+- `pnpm start:dev` - Start development server with hot reload
+- `pnpm build` - Build the application
+- `pnpm start:prod` - Start production server
+- `pnpm lint` - Run ESLint
+- `pnpm format` - Format code with Prettier
+- `pnpm test:watch` - Run tests in watch mode
+
+## 🏛️ Project Structure
+
+```
+src/
+├── auth/                 # Authentication module
+├── common/              # Shared utilities and modules
+│   └── pagination/      # Pagination functionality
+├── config/              # Configuration files
+├── meta-options/        # Meta options module
+├── posts/               # Posts module
+├── tags/                # Tags module
+├── users/               # Users module
+├── app.controller.ts    # Main application controller
+├── app.module.ts        # Root module
+├── app.service.ts       # Main application service
+└── main.ts             # Application entry point
+```
+
+## 🔒 Security Features
+
+- Password hashing with bcrypt
+- Input validation and sanitization
+- Environment-based configuration
+- SQL injection protection via TypeORM
+- CORS configuration (configurable)
+
+## 🌍 Environment Variables
+
+| Variable            | Description               | Default      |
+| ------------------- | ------------------------- | ------------ |
+| `NODE_ENV`          | Environment mode          | `production` |
+| `DATABASE_HOST`     | Database host             | `localhost`  |
+| `DATABASE_PORT`     | Database port             | `5432`       |
+| `DATABASE_USER`     | Database username         | -            |
+| `DATABASE_PASSWORD` | Database password         | -            |
+| `DATABASE_NAME`     | Database name             | -            |
+| `DATABASE_SYNC`     | Auto-sync database schema | `false`      |
+| `DATABASE_AUTOLOAD` | Auto-load entities        | `true`       |
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new functionality
+5. Ensure all tests pass
+6. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+## 🆘 Support
+
+For support and questions, please open an issue in the repository or contact the development team.

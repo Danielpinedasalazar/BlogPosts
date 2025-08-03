@@ -10,17 +10,12 @@ import {
   IsString,
   IsUrl,
   Matches,
-  Max,
   MaxLength,
-  Min,
   MinLength,
   ValidateNested,
-  isNotEmpty,
 } from 'class-validator';
 
 import { CreatePostMetaOptionsDto } from '../../meta-options/dtos/create-post-meta-options.dto';
-import { CreateTagDto } from 'src/tags/dtos/create-tag.dto';
-import { DeepPartial } from 'typeorm';
 import { Type } from 'class-transformer';
 import { postStatus } from '../enums/postStatus.enum';
 import { postType } from '../enums/postType.enum';
