@@ -5,14 +5,11 @@ import {
   BadRequestException,
   HttpException,
   HttpStatus,
-  Inject,
   Injectable,
   RequestTimeoutException,
 } from '@nestjs/common';
 import { User } from '../user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ConfigType } from '@nestjs/config';
-import profileConfig from '../config/profile.config';
 import { UsersCreateManyProvider } from './users-create-many.provider';
 import { CreateManyUsersDto } from '../dtos/create-many-users.dto';
 import { CreateUserProvider } from './create-user.provider';
@@ -32,9 +29,6 @@ export class UsersService {
      */
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-
-    @Inject(profileConfig.KEY)
-    private readonly profileConfiguration: ConfigType<typeof profileConfig>,
 
     /**
      * Inject UsersCreateMany provider
