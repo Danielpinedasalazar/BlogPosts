@@ -1,86 +1,43 @@
 # NestJS Blog API
 
-A comprehensive blog management system built with NestJS, TypeORM, and PostgreSQL. This application provides a complete REST API for managing users, posts, tags, and meta options with authentication and pagination support.
+A comprehensive blog application built with NestJS, featuring user authentication, post management, file uploads, and more.
 
 ## 🚀 Features
 
-- **User Management**: Create, read, update, and delete users with secure password hashing
-- **Post Management**: Full CRUD operations for blog posts with rich metadata
-- **Tag System**: Organize posts with flexible tagging system
-- **Meta Options**: Extensible metadata system for posts
-- **Authentication**: Secure user authentication with bcrypt
+- **User Management**: Complete user CRUD operations with Google OAuth integration
+- **Authentication**: JWT-based authentication with access and refresh tokens
+- **Post Management**: Create, read, update, and delete blog posts with status management
+- **Tag System**: Organize posts with tags
+- **File Uploads**: AWS S3 integration for file uploads
+- **Email System**: Welcome emails and notifications using Nodemailer
 - **Pagination**: Built-in pagination support for all list endpoints
-- **Validation**: Comprehensive input validation using class-validator
-- **Swagger Documentation**: Auto-generated API documentation
-- **Environment Configuration**: Multi-environment configuration support
-- **TypeORM Integration**: Database management with PostgreSQL
-
-## 🏗️ Architecture
-
-### Core Modules
-
-- **Users Module**: User management and authentication
-- **Posts Module**: Blog post CRUD operations
-- **Tags Module**: Tag management system
-- **Meta Options Module**: Extensible metadata system
-- **Auth Module**: Authentication and authorization
-- **Pagination Module**: Reusable pagination functionality
-
-### Database Schema
-
-#### Users
-
-- `id`: Primary key
-- `firstName`: User's first name (required)
-- `lastName`: User's last name (optional)
-- `email`: Unique email address (required)
-- `password`: Hashed password (required)
-- `posts`: One-to-many relationship with posts
-
-#### Posts
-
-- `id`: Primary key
-- `title`: Post title (required)
-- `postType`: Enum (POST, PAGE, etc.)
-- `slug`: Unique URL slug (required)
-- `status`: Enum (DRAFT, PUBLISHED, etc.)
-- `content`: Post content (optional)
-- `schema`: JSON schema for structured data (optional)
-- `featuredImageUrl`: Featured image URL (optional)
-- `publishOn`: Publication date (optional)
-- `author`: Many-to-one relationship with users
-- `tags`: Many-to-many relationship with tags
-- `metaOptions`: One-to-one relationship with meta options
-
-#### Tags
-
-- `id`: Primary key
-- `name`: Tag name (required)
-- `posts`: Many-to-many relationship with posts
-
-#### Meta Options
-
-- `id`: Primary key
-- `metaValue`: JSON metadata (required)
-- `post`: One-to-one relationship with posts
+- **API Documentation**: Swagger/OpenAPI documentation
+- **Database**: PostgreSQL with TypeORM
+- **Testing**: Unit and E2E tests with Jest
+- **Validation**: Request validation using class-validator
+- **Environment Configuration**: Multi-environment support
 
 ## 🛠️ Tech Stack
 
 - **Framework**: NestJS 10.x
-- **Database**: PostgreSQL with TypeORM
-- **Authentication**: bcrypt for password hashing
-- **Validation**: class-validator & class-transformer
+- **Language**: TypeScript
+- **Database**: PostgreSQL
+- **ORM**: TypeORM
+- **Authentication**: JWT, Google OAuth
+- **File Storage**: AWS S3
+- **Email**: Nodemailer with EJS templates
 - **Documentation**: Swagger/OpenAPI
-- **Configuration**: @nestjs/config with Joi validation
+- **Testing**: Jest
 - **Package Manager**: pnpm
 
 ## 📋 Prerequisites
 
 - Node.js (v18 or higher)
-- PostgreSQL database
-- pnpm package manager
+- PostgreSQL
+- AWS S3 bucket (for file uploads)
+- Google OAuth credentials (for social login)
 
-## 🚀 Installation & Setup
+## 🚀 Installation
 
 1. **Clone the repository**
 
@@ -95,53 +52,73 @@ A comprehensive blog management system built with NestJS, TypeORM, and PostgreSQ
    pnpm install
    ```
 
-3. **Environment Configuration**
+3. **Environment Setup**
 
    Create environment files based on your environment:
 
-   **Development** (`.env.development`):
+   ```bash
+   # For development
+   cp .env.example .env.development
+
+   # For production
+   cp .env.example .env.production
+   ```
+
+   Required environment variables:
 
    ```env
    NODE_ENV=development
+   DATABASE_PORT=5432
    DATABASE_HOST=localhost
-   DATABASE_PORT=5432
-   DATABASE_USER=your_db_user
-   DATABASE_PASSWORD=your_db_password
-   DATABASE_NAME=your_db_name
-   DATABASE_SYNC=true
-   DATABASE_AUTOLOAD=true
-   ```
-
-   **Production** (`.env.production`):
-
-   ```env
-   NODE_ENV=production
-   DATABASE_HOST=your_prod_host
-   DATABASE_PORT=5432
-   DATABASE_USER=your_prod_user
-   DATABASE_PASSWORD=your_prod_password
-   DATABASE_NAME=your_prod_db
-   DATABASE_SYNC=false
-   DATABASE_AUTOLOAD=true
+   DATABASE_NAME=your_database_name
+   DATABASE_USER=your_database_user
+   DATABASE_PASSWORD=your_database_password
+   PROFILE_API_KEY=your_profile_api_key
+   JWT_SECRET=your_jwt_secret
+   JWT_TOKEN_AUDIENCE=your_jwt_audience
+   JWT_TOKEN_ISSUER=your_jwt_issuer
+   JWT_ACCESS_TOKEN_TTL=3600
+   JWT_REFRESH_TOKEN_TTL=86400
+   API_VERSION=v1
+   AWS_PUBLIC_BUCKET_NAME=your_s3_bucket
+   AWS_REGION=your_aws_region
+   AWS_CLOUDFRONT_URL=your_cloudfront_url
+   AWS_ACCESS_KEY_ID=your_aws_access_key
+   AWS_SECRET_ACCESS_KEY_ID=your_aws_secret_key
+   MAIL_HOST=your_smtp_host
+   SMTP_USERNAME=your_smtp_username
+   SMTP_PASSWORD=your_smtp_password
    ```
 
 4. **Database Setup**
 
-   ```bash
-   # Create PostgreSQL database
-   createdb your_db_name
-   ```
-
-5. **Run the application**
+   Update the TypeORM CLI configuration in `typeorm-cli.config.ts` with your database credentials, then run:
 
    ```bash
-   # Development mode
-   pnpm start:dev
-
-   # Production mode
-   pnpm build
-   pnpm start:prod
+   # Run migrations
+   pnpm run migration:run
    ```
+
+## 🏃‍♂️ Running the Application
+
+### Development
+
+```bash
+pnpm run start:dev
+```
+
+### Production
+
+```bash
+pnpm run build
+pnpm run start:prod
+```
+
+### Debug Mode
+
+```bash
+pnpm run start:debug
+```
 
 ## 📚 API Documentation
 
@@ -151,149 +128,126 @@ Once the application is running, you can access the Swagger documentation at:
 http://localhost:3000/api
 ```
 
-## 🔌 API Endpoints
+## 🧪 Testing
+
+### Unit Tests
+
+```bash
+pnpm run test
+```
+
+### E2E Tests
+
+```bash
+pnpm run test:e2e
+```
+
+### Test Coverage
+
+```bash
+pnpm run test:cov
+```
+
+## 📁 Project Structure
+
+```
+src/
+├── auth/                 # Authentication module
+│   ├── config/          # JWT configuration
+│   ├── decorators/      # Custom decorators
+│   ├── dtos/           # Data transfer objects
+│   ├── guards/         # Authentication guards
+│   ├── providers/      # Auth services
+│   └── social/         # Google OAuth integration
+├── common/             # Shared modules
+│   ├── interceptors/   # Response interceptors
+│   └── pagination/     # Pagination utilities
+├── config/             # Configuration files
+├── mail/               # Email functionality
+├── meta-options/       # Meta options management
+├── posts/              # Blog posts module
+├── tags/               # Tags management
+├── uploads/            # File upload functionality
+├── users/              # User management
+└── migrations/         # Database migrations
+```
+
+## 🔐 Authentication
+
+The application supports multiple authentication methods:
+
+### JWT Authentication
+
+- Access tokens for API access
+- Refresh tokens for token renewal
+- Configurable token expiration
+
+### Google OAuth
+
+- Social login integration
+- Automatic user creation for Google users
+
+## 📝 API Endpoints
 
 ### Users
 
+- `POST /users` - Create a new user
 - `GET /users` - Get all users (with pagination)
 - `GET /users/:id` - Get user by ID
-- `POST /users` - Create a new user
-- `POST /users/create-many` - Create multiple users
 - `PATCH /users/:id` - Update user
 - `DELETE /users/:id` - Delete user
 
+### Authentication
+
+- `POST /auth/signin` - Sign in with email/password
+- `POST /auth/refresh` - Refresh access token
+- `POST /auth/google` - Google OAuth authentication
+
 ### Posts
 
+- `POST /posts` - Create a new post
 - `GET /posts` - Get all posts (with pagination)
 - `GET /posts/:id` - Get post by ID
-- `POST /posts` - Create a new post
 - `PATCH /posts/:id` - Update post
 - `DELETE /posts/:id` - Delete post
 
 ### Tags
 
-- `GET /tags` - Get all tags
 - `POST /tags` - Create a new tag
+- `GET /tags` - Get all tags
 - `DELETE /tags/:id` - Delete tag
 
-### Meta Options
+### File Uploads
 
-- `POST /meta-options` - Create meta options for a post
+- `POST /uploads` - Upload file to AWS S3
 
-## 📝 Example API Requests
+## 🔧 Configuration
 
-### Create a User
+### Database Configuration
 
-```http
-POST http://localhost:3000/users
-Content-Type: application/json
+The application uses TypeORM with PostgreSQL. Configuration is handled through environment variables and the `database.config.ts` file.
 
-{
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "john.doe@example.com",
-  "password": "securepassword123"
-}
-```
+### AWS Configuration
 
-### Create a Post
+File uploads are handled through AWS S3. Configure your AWS credentials and bucket settings in the environment variables.
 
-```http
-POST http://localhost:3000/posts
-Content-Type: application/json
+### Email Configuration
 
-{
-  "title": "What's new with NestJS",
-  "postType": "post",
-  "slug": "new-with-nestjs-10",
-  "status": "draft",
-  "content": "This is the post content...",
-  "schema": "{\"@context\": \"https://schema.org\", \"@type\": \"Article\"}",
-  "featuredImageUrl": "http://example.com/image.jpg",
-  "authorId": 1,
-  "tags": [1, 2],
-  "metaOptions": {
-    "metaValue": "{\"sidebarEnabled\": true, \"footerActive\": true}"
-  }
-}
-```
+Email functionality uses Nodemailer with SMTP configuration. Set up your SMTP credentials in the environment variables.
 
-### Get Posts with Pagination
+## 📦 Available Scripts
 
-```http
-GET http://localhost:3000/posts/?limit=10&page=1
-```
-
-## 🧪 Testing
-
-```bash
-# Unit tests
-pnpm test
-
-# E2E tests
-pnpm test:e2e
-
-# Test coverage
-pnpm test:cov
-```
-
-## 📖 Documentation Generation
-
-Generate comprehensive documentation using Compodoc:
-
-```bash
-pnpm doc
-```
-
-This will start a documentation server at `http://localhost:3001`
-
-## 🔧 Development Scripts
-
-- `pnpm start:dev` - Start development server with hot reload
-- `pnpm build` - Build the application
-- `pnpm start:prod` - Start production server
-- `pnpm lint` - Run ESLint
-- `pnpm format` - Format code with Prettier
-- `pnpm test:watch` - Run tests in watch mode
-
-## 🏛️ Project Structure
-
-```
-src/
-├── auth/                 # Authentication module
-├── common/              # Shared utilities and modules
-│   └── pagination/      # Pagination functionality
-├── config/              # Configuration files
-├── meta-options/        # Meta options module
-├── posts/               # Posts module
-├── tags/                # Tags module
-├── users/               # Users module
-├── app.controller.ts    # Main application controller
-├── app.module.ts        # Root module
-├── app.service.ts       # Main application service
-└── main.ts             # Application entry point
-```
-
-## 🔒 Security Features
-
-- Password hashing with bcrypt
-- Input validation and sanitization
-- Environment-based configuration
-- SQL injection protection via TypeORM
-- CORS configuration (configurable)
-
-## 🌍 Environment Variables
-
-| Variable            | Description               | Default      |
-| ------------------- | ------------------------- | ------------ |
-| `NODE_ENV`          | Environment mode          | `production` |
-| `DATABASE_HOST`     | Database host             | `localhost`  |
-| `DATABASE_PORT`     | Database port             | `5432`       |
-| `DATABASE_USER`     | Database username         | -            |
-| `DATABASE_PASSWORD` | Database password         | -            |
-| `DATABASE_NAME`     | Database name             | -            |
-| `DATABASE_SYNC`     | Auto-sync database schema | `false`      |
-| `DATABASE_AUTOLOAD` | Auto-load entities        | `true`       |
+- `pnpm run build` - Build the application
+- `pnpm run start` - Start the application
+- `pnpm run start:dev` - Start in development mode with hot reload
+- `pnpm run start:debug` - Start in debug mode
+- `pnpm run start:prod` - Start in production mode
+- `pnpm run test` - Run unit tests
+- `pnpm run test:e2e` - Run E2E tests
+- `pnpm run test:cov` - Run tests with coverage
+- `pnpm run lint` - Run ESLint
+- `pnpm run format` - Format code with Prettier
+- `pnpm run doc` - Generate API documentation
 
 ## 🤝 Contributing
 
@@ -311,3 +265,27 @@ This project is licensed under the MIT License.
 ## 🆘 Support
 
 For support and questions, please open an issue in the repository or contact the development team.
+
+## 🔄 Migration Commands
+
+```bash
+# Generate a new migration
+pnpm run migration:generate -- -n MigrationName
+
+# Run migrations
+pnpm run migration:run
+
+# Revert last migration
+pnpm run migration:revert
+```
+
+## 🚀 Deployment
+
+The application is ready for deployment to various platforms:
+
+- **Docker**: Use the provided Dockerfile
+- **Heroku**: Configure environment variables and deploy
+- **AWS**: Deploy to EC2 or use AWS Elastic Beanstalk
+- **Vercel**: Deploy as a serverless function
+
+Make sure to set all required environment variables in your deployment environment.
